@@ -53,7 +53,7 @@ class TicTacToe():
     def play_to_learn(self, episodes):
 
         for i in range(episodes):
-            # print('Episode number: ' + str(i))
+            print('Episode number: ' + str(i))
 
             while self.winner is None:
                 self.state = self.play_move(learn=True)
