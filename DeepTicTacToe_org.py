@@ -469,7 +469,7 @@ def check_player():
     #game.play_to_learn(1000)
     print('DeepAgent X 0.8 and DeepAgent 0.8')
     game = TicTacToe('DeepAgent', 'DeepAgent', 0.8, 0.8)
-    game.play_to_learn(30000)
+    game.play_to_learn(100)
     print('DeepAgent X 0 and QAgent 1, 0')
     game = TicTacToe('Player', 'DeepAgent', 0.8, 0.8)
     game.play_game()
