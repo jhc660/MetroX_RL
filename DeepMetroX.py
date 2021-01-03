@@ -33,17 +33,12 @@ class MetroX():
             while self.gameEnd is False:
                 self.state = self.play_move(learn=True)
 
+            print('Score: ' + self.board.calculateScore())
+
             # update last state
             self.state = self.play_move(learn=True)
             # update winning state
             self.state = self.play_move(learn=True)
-            
-            if i% 500 == 0:
-                #self.print_bar()
-                print('-------------------')
-                self.player1.print_value = True
-            else:
-                self.player1.print_value = False
 
             self.init_game()
         self.player1.save_values()
@@ -249,7 +244,7 @@ class DeepAgent(Agent):
 def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
     game = MetroX('DeepAgent', 'Random', 0.8)
-    game.play_to_learn(5)
+    game.play_to_learn(10000)
     game = MetroX('DeepAgent', 'Random', 0.8)
     game.play_game()
 
