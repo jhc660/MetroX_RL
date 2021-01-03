@@ -26,14 +26,18 @@ class MetroX():
             self.print_game()
 
     def play_to_learn(self, episodes):
-
+        avgScore = 0
         for i in range(episodes):
             print('Episode number: ' + str(i))
 
             while self.gameEnd is False:
                 self.state = self.play_move(learn=True)
 
-            print('Score: ' + str(self.board.calculateScore()))
+            score = self.board.calculateScore()
+            avgScore = (avgScore*0.95) + (score*0.05)
+                
+            print('Score: ' + str(score))
+            print('Weighted Average Score: ' + str(avgScore))
 
             # update last state
             self.state = self.play_move(learn=True)
@@ -148,7 +152,7 @@ class Agent(Player):
                 v_temp = np.average(v_temp)
             else:
                 # encourage exploration
-                v_temp = 1
+                v_temp = 50
 
             if v_temp > v:
                 temp_move_list = [idx]
@@ -200,8 +204,8 @@ class DeepAgent(Agent):
         else:
             print('new model')
             model = Km.Sequential()
-            model.add(Kl.Dense(18, activation='relu', input_dim=95))
-            model.add(Kl.Dense(18, activation='relu'))
+            model.add(Kl.Dense(64, activation='relu', input_dim=95))
+            model.add(Kl.Dense(64, activation='relu'))
             model.add(Kl.Dense(1, activation='linear'))
             model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
 
@@ -245,7 +249,7 @@ def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
     game = MetroX('DeepAgent', 'Random', 0.8)
     game.play_to_learn(10000)
-    game = MetroX('DeepAgent', 'Random', 0.8)
+    game = MetroX('DeepAgent', 'Random', 1)
     game.play_game()
 
 
