@@ -70,9 +70,9 @@ class MetroX():
         return self.cardDeck.getState()
 
     def init_game(self):
-        self.board = TokyoBoard()
+        self.board = TokyoBoard.TokyoBoard()
         self.gameEnd = False
-        self.cardDeck = CardDeck()
+        self.cardDeck = cardDeck.CardDeck()
 
 
 class Player():
@@ -93,7 +93,7 @@ class Agent(Player):
         super().__init__(tag, exploration_factor)
         self.epsilon = 0.1
         self.alpha = 0.5
-        self.prev_state = TokyoBoard().getState() + CardDeck().getState()
+        self.prev_state = TokyoBoard.TokyoBoard().getState() + cardDeck.CardDeck().getState()
         self.state = None
         self.print_value = False
 
