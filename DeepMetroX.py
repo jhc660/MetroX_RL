@@ -46,7 +46,7 @@ class MetroX():
             print('Weighted Average Score: ' + str(avgScore))
 
             log = open("results.txt", "a")
-            log.write('Weighted Average Score: ' + str(avgScore))
+            log.write(str(score)+', ')
             log.close()
 
             # update last state
