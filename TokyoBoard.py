@@ -91,7 +91,7 @@ class TokyoBoard():
         string = ''
         for trainLine in self.trainLines:
             string+=str(trainLine)+'\n'
-        string += self.calculateScore()
+        string += 'Score: ' + str(self.calculateScore())
         return string
 
     def getState(self):
