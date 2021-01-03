@@ -20,9 +20,6 @@ class MetroX():
         self.init_game()
 
     def play_game(self):
-        if isinstance(self.player1, QAgent):
-            self.player1.exp_factor = 1
-
         while self.gameEnd is False:
             self.state = self.play_move()
             self.print_game()
