@@ -261,7 +261,7 @@ def check_player():
     #game = TicTacToe('DeepAgent', 'DeepAgent', 1, 1)
     #game.play_to_learn(100)
     #print('DeepAgent X 0 and QAgent 1, 0')
-    game = MetroX('Player', 'Random', 0.8, 1)
+    game = MetroX('Player', 'Random', 0.8)
     #game.play_game()
 
 
