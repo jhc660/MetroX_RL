@@ -81,7 +81,7 @@ class Player():
     def make_move(self, board, cardDeck, gameEnd):
         idx = int(input('Choose station number: '))
         board.makeMove(idx, cardDeck.currentCard)
-        return board.getState()
+        return board.getState()+cardDeck.getState()
 
 
 class Agent(Player):
