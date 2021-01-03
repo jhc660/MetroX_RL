@@ -27,7 +27,12 @@ class MetroX():
 
     def play_to_learn(self, episodes):
         avgScore = 0
-        os.remove("results.txt")
+        
+        try:
+            os.remove("results.txt")
+        except:
+            pass
+        
         for i in range(episodes):
             print('Episode number: ' + str(i))
 
