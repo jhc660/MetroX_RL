@@ -54,6 +54,9 @@ class MetroX():
             # update winning state
             self.state = self.play_move(learn=True)
 
+            if i%300 == 0:
+                self.player1.save_values()
+
             self.init_game()
         
         self.player1.save_values()
