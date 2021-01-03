@@ -22,8 +22,10 @@ class CardDeck():
         card = self.currentCard
         if card == 'c2':
             card = '7'
-        if card == 'c3':
+        elif card == 'c3':
             card = '8'
+        elif card == 's':
+            card = '1'
         state = card
         state += str(self.deck.count('2'))
         state += str(self.deck.count('3'))
