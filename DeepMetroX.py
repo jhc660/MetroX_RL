@@ -21,8 +21,8 @@ class MetroX():
 
     def play_game(self):
         while self.gameEnd is False:
-            self.state = self.play_move()
             self.print_game()
+            self.state = self.play_move()
 
     def play_to_learn(self, episodes):
 
