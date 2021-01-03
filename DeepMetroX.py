@@ -8,7 +8,7 @@ import keras.layers as Kl
 import keras.models as Km
 import numpy as np
 import matplotlib.pyplot as plt
-import tokyoBoard
+import TokyoBoard
 import cardDeck
 
 class MetroX():
@@ -106,11 +106,10 @@ class Agent(Player):
         pass
 
     def make_move(self, board, cardDeck, gameEnd):
-
-        self.state = state
+        self.state = board.getState()+cardDeck.getState()
 
         if gameEnd:
-            new_state = board.getState()
+            new_state = board.getState()+cardDeck.getState()
             return new_state
 
         p = random.uniform(0, 1)
