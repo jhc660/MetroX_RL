@@ -1,4 +1,5 @@
 import random
+import copy
 
 class CardDeck():
     def __init__(self):
@@ -33,6 +34,11 @@ class CardDeck():
         state += str(self.deck.count('c2'))
         state += str(self.deck.count('c3'))
         return state
+
+    def previewNextCard(self):
+        copiedDeck = copy.deepCopy(self)
+        copiedDeck.nextCard()
+        return copiedDeck.getState()
 
     def initDeck(self):
         self.deck = []

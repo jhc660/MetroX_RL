@@ -1,4 +1,5 @@
 import cardDeck
+import copy
 
 class TokyoBoard():
     def __init__(self):
@@ -127,6 +128,12 @@ class TokyoBoard():
         if card == 'c3':
             self.advanceLine(line, 3, 'circle')
 
+    def previewMove(self, line, card):
+        copiedBoard = copy.deepcopy(self)
+        copiedBoard.makeMove(line, card)
+        return copiedBoard.getState()
+        
+
     def advanceLine(self, line, number, cardType):
         if self.trainLines[line].maxCars > self.trainLines[line].cars:
             self.trainLines[line].advance(number, cardType)
@@ -252,6 +259,7 @@ class TrainStation():
 
 def testRoutine():
     tokyoBoardTest = TokyoBoard()
+    cardDeckTest = cardDeck.CardDeck()
     print(tokyoBoardTest.getState())
     tokyoBoardTest.makeMove(4, '6')
     tokyoBoardTest.makeMove(5, 'c2')
@@ -262,5 +270,8 @@ def testRoutine():
     print(tokyoBoardTest.getState())
     print('Points: '+str(tokyoBoardTest.calculateScore()))
     print(tokyoBoardTest.getValidMoves())
+    print(tokyoBoardTest.previewMove(1, '6'))
+    print(tokyoBoardTest)
+    print(tokyoBoardTest.getState()+cardDeckTest.getState())
 
 #testRoutine()

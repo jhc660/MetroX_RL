@@ -115,86 +115,81 @@ class Agent(Player):
         else:
             moves = board.getValidMoves()
             idx = random.choice(moves)
-            board.makeMove(board, cardDeck.currentCard)
-            new_state = board.getState()
+            board.makeMove(idx, cardDeck.currentCard)
+            new_state = board.getState()+cardDeck.getState()
         return new_state
 
-    def make_move_and_learn(self, state, winner):
+    def make_move_and_learn(self, board, cardDeck, gameEnd):
 
-        self.learn_state(state, winner)
+        self.learn_state(board, cardDeck, gameEnd)
 
-        return self.make_move(state, winner)
+        return self.make_move(board, cardDeck, gameEnd)
 
-    def make_optimal_move(self, state):
+    def make_optimal_move(self, board, cardDeck):
         moves = board.getValidMoves()
         if len(moves) == 1:
-            temp_state = state[:moves[0]] + self.tag + state[moves[0] + 1:]
-            new_state = temp_state
-            return new_state
+            board.makeMove(moves[0], cardDeck)
+            return board.getState()+cardDeck.getState()
 
-        temp_state_list = []
+        temp_move_list = []
         v = -float('Inf')
 
         for idx in moves:
 
             v_temp = []
-            temp_state = state[:idx] + self.tag + state[idx + 1:]
+            temp_state = board.previewMove(idx, cardDeck.currentCard)
 
-            moves_op = [s for s, v in enumerate(temp_state) if v.isnumeric()]
-            for idy in moves_op:
-                temp_state_op = temp_state[:idy] + self.op_tag + temp_state[idy + 1:]
+            simCardDraws = 10
+            while simCardDraws > 0:
+                simCardDraws-=1
+                temp_state_op = temp_state+cardDeck.previewNextCard()
                 v_temp.append(self.calc_value(temp_state_op))
 
             # deletes Nones
             v_temp = list(filter(None.__ne__, v_temp))
 
             if len(v_temp) != 0:
-                v_temp = np.min(v_temp)
+                v_temp = np.average(v_temp)
             else:
                 # encourage exploration
                 v_temp = 1
 
             if v_temp > v:
-                temp_state_list = [temp_state]
+                temp_move_list = [idx]
                 v = v_temp
             elif v_temp == v:
-                temp_state_list.append(temp_state)
+                temp_move_list.append(idx)
 
         try:
-            new_state = random.choice(temp_state_list)
+            board.makeMove(random.choice(temp_move_list), cardDeck)
         except ValueError:
             print('temp state:', temp_state_list)
             raise Exception('temp state empty')
 
-        return new_state
+        return board.getState()+cardDeck.getState()
 
-    def reward(self, score):
-        return score
+    def reward(self, board):
+        return board.calculateScore()
 
 class DeepAgent(Agent):
 
-    def __init__(self, tag, exploration_factor=1):
+    def __init__(self, exploration_factor=1):
         super().__init__(tag, exploration_factor)
-        self.tag = tag
         self.value_model = self.load_model()
 
     @staticmethod
     def state2array(state):
-
         num_state = []
         for s in state:
-            if s == 'X':
-                num_state.append(1)
-            elif s == 'O':
-                num_state.append(-1)
-            else:
-                num_state.append(0)
+            num_state.append(int(s))
         num_state = np.array([num_state])
         return num_state
 
-    def learn_state(self, state, winner):
+    def learn_state(self, board, cardDeck, gameEnd):
 
-        target = self.calc_target(state, winner)
+        state = board.getState()+cardDeck.getState()
+
+        target = self.calc_target(board, cardDeck, gameEnd)
 
         self.train_model(target, 10)
 
@@ -209,7 +204,7 @@ class DeepAgent(Agent):
         else:
             print('new model')
             model = Km.Sequential()
-            model.add(Kl.Dense(18, activation='relu', input_dim=9))
+            model.add(Kl.Dense(18, activation='relu', input_dim=96))
             model.add(Kl.Dense(18, activation='relu'))
             model.add(Kl.Dense(1, activation='linear'))
             model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
@@ -220,22 +215,19 @@ class DeepAgent(Agent):
     def calc_value(self, state):
         return self.value_model.predict(self.state2array(state))
 
-    def calc_target(self, state, winner):
+    def calc_target(self, board, cardDeck, gameEnd):
+        v_s = self.calc_value(self.prev_state)
 
-        if self.tag in state:
+        R = self.reward(board)
 
-            v_s = self.calc_value(self.prev_state)
+        if gameEnd:
+            v_s_tag = 0
+        else:
+            v_s_tag = self.calc_value(board.getState()+cardDeck.getState())
 
-            R = self.reward(winner)
+        target = np.array(v_s + self.alpha * (R + v_s_tag - v_s))
 
-            if winner is None:
-                v_s_tag = self.calc_value(state)
-            else:
-                v_s_tag = 0
-
-            target = np.array(v_s + self.alpha * (R + v_s_tag - v_s))
-
-            return target
+        return target
 
     def train_model(self, target, epochs):
 
@@ -245,7 +237,7 @@ class DeepAgent(Agent):
             self.value_model.fit(X_train, target, epochs=epochs, verbose=0)
 
     def save_values(self):
-        s = 'model_values' + self.tag + '.h5'
+        s = 'model_values_metroX' + '.h5'
         try:
             os.remove(s)
         except:
@@ -255,11 +247,10 @@ class DeepAgent(Agent):
 
 def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
-    #game = TicTacToe('DeepAgent', 'DeepAgent', 1, 1)
-    #game.play_to_learn(100)
-    #print('DeepAgent X 0 and QAgent 1, 0')
-    game = MetroX('Player', 'Random', 0.8)
-    game.play_game()
+    game = MetroX('DeepAgent', 'Random', 0.8)
+    game.play_to_learn(1000)
+    #game = MetroX('Player', 'Random', 0.8)
+    #game.play_game()
 
 
 check_player()
