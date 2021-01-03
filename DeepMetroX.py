@@ -262,7 +262,7 @@ def check_player():
     #game.play_to_learn(100)
     #print('DeepAgent X 0 and QAgent 1, 0')
     game = MetroX('Player', 'Random', 0.8)
-    #game.play_game()
+    game.play_game()
 
 
 check_player()
