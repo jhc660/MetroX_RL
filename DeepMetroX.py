@@ -60,7 +60,7 @@ class MetroX():
         print('Card:' + self.cardDeck.currentCard)
 
     def turnEnd(self):
-        if board.gameOver():
+        if self.board.gameOver():
             self.gameEnd = True
         else:
             self.cardDeck.nextCard();
