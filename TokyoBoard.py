@@ -134,7 +134,7 @@ class TokyoBoard():
         gameOver = False
         emptyStations = 0
         for trainLine in self.trainLines:
-            emptyStations += trainLine.maxCars - cars
+            emptyStations += trainLine.maxCars - trainLine.cars
         if emptyStations == 0:
             gameOver = True
         return gameOver
