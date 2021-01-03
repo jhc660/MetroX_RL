@@ -247,10 +247,10 @@ class DeepAgent(Agent):
 
 def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
+    #game = MetroX('DeepAgent', 'Random', 0.8)
+    #game.play_to_learn(1000)
     game = MetroX('DeepAgent', 'Random', 0.8)
-    game.play_to_learn(1000)
-    #game = MetroX('Player', 'Random', 0.8)
-    #game.play_game()
+    game.play_game()
 
 
 check_player()
