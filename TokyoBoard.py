@@ -91,6 +91,7 @@ class TokyoBoard():
         string = ''
         for trainLine in self.trainLines:
             string+=str(trainLine)+'\n'
+        string += self.calculateScore()
         return string
 
     def getState(self):
@@ -196,6 +197,7 @@ class TrainLine():
 
     def __str__(self):
         printValue = 'Points: '+ str(self.points) + ' '
+        printValue += '{'+str(self.maxCars-self.cars)+'} '
         for station in self.stations:
             if station.fill == 'Empty':
                 printValue+='[ ]'
