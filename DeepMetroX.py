@@ -20,9 +20,10 @@ class MetroX():
         self.init_game()
 
     def play_game(self):
+        self.print_game()
         while self.gameEnd is False:
-            self.print_game()
             self.state = self.play_move()
+            self.print_game()
 
     def play_to_learn(self, episodes):
 
@@ -247,8 +248,8 @@ class DeepAgent(Agent):
 
 def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
-    #game = MetroX('DeepAgent', 'Random', 0.8)
-    #game.play_to_learn(1000)
+    game = MetroX('DeepAgent', 'Random', 0.8)
+    game.play_to_learn(1000)
     game = MetroX('DeepAgent', 'Random', 0.8)
     game.play_game()
 

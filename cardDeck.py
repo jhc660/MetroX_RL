@@ -65,11 +65,4 @@ class CardDeck():
         self.deck.append('c2')
         self.deck.append('c3')
 
-#x = 60
-#cardDeck = CardDeck()
-#while x>0:
-#    x-=1
-#    cardDeck.nextCard()
-#    print(cardDeck.getState())
-
 
