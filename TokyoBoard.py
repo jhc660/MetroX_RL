@@ -110,21 +110,21 @@ class TokyoBoard():
 
     def makeMove(self, line, card):
         if card == '2':
-            advanceLine(line, 2, 'normal')
+            self.advanceLine(line, 2, 'normal')
         if card == '3':
-            advanceLine(line, 2, 'normal')
+            self.advanceLine(line, 2, 'normal')
         if card == '4':
-            advanceLine(line, 4, 'normal')
+            self.advanceLine(line, 4, 'normal')
         if card == '5':
-            advanceLine(line, 5, 'normal')
+            self.advanceLine(line, 5, 'normal')
         if card == '6':
-            advanceLine(line, 6, 'normal')
+            self.advanceLine(line, 6, 'normal')
         if card == 's':
-            advanceLine(line, 1, 'star')
+            self.advanceLine(line, 1, 'star')
         if card == 'c2':
-            advanceLine(line, 2, 'circle')
+            self.advanceLine(line, 2, 'circle')
         if card == 'c3':
-            advanceLine(line, 3, 'circle')
+            self.advanceLine(line, 3, 'circle')
 
     def advanceLine(self, line, number, cardType):
         if self.trainLines[line].maxCars > self.trainLines[line].cars:
@@ -251,11 +251,11 @@ class TrainStation():
 def testRoutine():
     tokyoBoardTest = TokyoBoard()
     print(tokyoBoardTest.getState())
-    tokyoBoardTest.advanceLine(4, 6, 'normal')
-    tokyoBoardTest.advanceLine(5, 2, 'circle')
-    tokyoBoardTest.advanceLine(5, 1, 'star')
-    tokyoBoardTest.advanceLine(4, 6, 'normal')
-    tokyoBoardTest.advanceLine(4, 6, 'normal')
+    tokyoBoardTest.makeMove(4, '6')
+    tokyoBoardTest.makeMove(5, 'c2')
+    tokyoBoardTest.makeMove(5, 's')
+    tokyoBoardTest.makeMove(4, '6')
+    tokyoBoardTest.makeMove(4, '6')
     print(tokyoBoardTest)
     print(tokyoBoardTest.getState())
     print('Points: '+str(tokyoBoardTest.calculateScore()))
