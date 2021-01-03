@@ -104,8 +104,8 @@ class TokyoBoard():
     def getValidMoves(self):
         moves = []
         for i in range(len(self.trainLines)):
-            if trainLine[i].maxCars > cars:
-                moves.append[i]
+            if self.trainLines[i].maxCars > self.trainLines[i].cars:
+                moves.append(i)
         return moves
 
     def makeMove(self, line, card):
@@ -259,5 +259,6 @@ def testRoutine():
     print(tokyoBoardTest)
     print(tokyoBoardTest.getState())
     print('Points: '+str(tokyoBoardTest.calculateScore()))
+    print(tokyoBoardTest.getValidMoves())
 
-testRoutine()
+#testRoutine()

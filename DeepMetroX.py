@@ -48,78 +48,31 @@ class MetroX():
                 self.player1.print_value = False
 
             self.init_game()
-
-        #self.print_summary()
         self.player1.save_values()
 
     def play_move(self, learn=False):
         if learn is True:
-            new_state = self.player1.make_move_and_learn(self.board, self.cardDeck, self.gameEnd)
+            board_state = self.player1.make_move_and_learn(self.board, self.cardDeck, self.gameEnd)
         else:
-            new_state = self.player1.make_move(self.board, self.cardDeck, self.gameEnd)
-        self.turnEnd()
-        return new_state
+            board_state = self.player1.make_move(self.board, self.cardDeck, self.gameEnd)
+        card_state = self.turnEnd()
+        return board_state+card_state
 
     def print_game(self):
         print(self.board)
+        print('Card:' + self.cardDeck.currentCard)
 
     def turnEnd(self):
         if board.gameOver():
             self.gameEnd = True
         else:
-            cardDeck.nextCard();
+            self.cardDeck.nextCard();
+        return self.cardDeck.getState()
 
     def init_game(self):
         self.board = TokyoBoard()
-        self.state = board.getFlatState()
         self.gameEnd = False
         self.cardDeck = CardDeck()
-
-    def print_bar(self):
-        plt.close()
-        fig = plt.figure()
-        ax1 = fig.add_subplot(2, 1, 1)
-        ax2 = fig.add_subplot(2, 1, 2)
-
-        x = ['X', 'Tie', 'O', 'Sum']
-        a = self.Xcount
-        b = self.Tcount
-        c = self.Ocount
-        d = self.all_count
-
-        aprec = 100*a / (a + b + c + 1)
-        bprec = 100*b / (a + b + c + 1)
-        cprec = 100*c / (a + b + c + 1)
-
-        ax1.clear()
-        ax2.clear()
-        bar1 = ax1.bar(x, [a, b, c, d])
-        bar1[0].set_color('r')
-        bar1[1].set_color('b')
-        ax1.set_ylim((0, d + 100))
-        plt.draw()
-
-        bar2 = ax2.bar(x[0:3], [aprec, bprec, cprec])
-        bar2[0].set_color('r')
-        bar2[1].set_color('b')
-        ax2.set_ylim((0, 100))
-
-        for rect in bar2:
-            height = rect.get_height()
-            ax2.text(rect.get_x() + rect.get_width() / 2., 1.05 * height,
-                    '%d' % int(height),
-                    ha='center', va='bottom')
-
-        plt.draw()
-
-        plt.pause(0.05)
-
-    def print_summary(self):
-        a = ['X',   self.Xcount, 100 * self.Xcount / (self.Xcount + self.Ocount + self.Tcount)]
-        b = ['O',   self.Ocount, 100 * self.Ocount / (self.Xcount + self.Ocount + self.Tcount)]
-        c = ['Tie', self.Tcount, 100 * self.Tcount / (self.Xcount + self.Ocount + self.Tcount)]
-        tab = tabulate([a, b, c], headers=['Player', 'num of wins', 'prec'])
-        print(tab)
 
 
 class Player():
@@ -140,34 +93,34 @@ class Agent(Player):
         super().__init__(tag, exploration_factor)
         self.epsilon = 0.1
         self.alpha = 0.5
-        self.prev_state = '123456789'
+        self.prev_state = TokyoBoard().getState() + CardDeck().getState()
         self.state = None
         self.print_value = False
 
     @abstractmethod
-    def calc_value(self, state):
+    def calc_value(self, board, cardDeck):
         pass
 
     @abstractmethod
-    def learn_state(self, state, winner):
+    def learn_state(self, board, cardDeck, gameEnd):
         pass
 
-    def make_move(self, state, winner):
+    def make_move(self, board, cardDeck, gameEnd):
 
         self.state = state
 
-        if winner is not None:
-            new_state = state
+        if gameEnd:
+            new_state = board.getState()
             return new_state
 
         p = random.uniform(0, 1)
         if p < self.exp_factor:
-            new_state = self.make_optimal_move(state)
+            new_state = self.make_optimal_move(board, cardDeck)
         else:
-            moves = [s for s, v in enumerate(state) if v.isnumeric()]
+            moves = board.getValidMoves()
             idx = random.choice(moves)
-            new_state = state[:idx] + self.tag + state[idx + 1:]
-
+            board.makeMove(board, cardDeck.currentCard)
+            new_state = board.getState()
         return new_state
 
     def make_move_and_learn(self, state, winner):
@@ -177,8 +130,7 @@ class Agent(Player):
         return self.make_move(state, winner)
 
     def make_optimal_move(self, state):
-        moves = [s for s, v in enumerate(state) if v.isnumeric()]
-
+        moves = board.getValidMoves()
         if len(moves) == 1:
             temp_state = state[:moves[0]] + self.tag + state[moves[0] + 1:]
             new_state = temp_state
@@ -197,7 +149,7 @@ class Agent(Player):
                 temp_state_op = temp_state[:idy] + self.op_tag + temp_state[idy + 1:]
                 v_temp.append(self.calc_value(temp_state_op))
 
-            # delets Nones
+            # deletes Nones
             v_temp = list(filter(None.__ne__, v_temp))
 
             if len(v_temp) != 0:
@@ -222,61 +174,6 @@ class Agent(Player):
 
     def reward(self, score):
         return score
-
-
-class QAgent(Agent):
-
-    def __init__(self, tag, exploration_factor=1):
-        super().__init__(tag, exploration_factor)
-        self.tag = tag
-        self.values = dict()
-        self.load_values()
-
-    def learn_state(self, state, score):
-
-        if self.tag in state:
-            if self.prev_state in self.values.keys():
-                v_s = self.values[self.prev_state]
-            else:
-                v_s = int(0)
-
-            R = self.reward(score)
-
-            if self.state in self.values.keys() and winner is None:
-                v_s_tag = self.values[state]
-            else:
-                v_s_tag = int(0)
-
-            self.values[self.prev_state] = v_s + self.alpha*(R + v_s_tag - v_s)
-
-        self.prev_state = state
-
-    def calc_value(self, state):
-        if state in self.values.keys():
-            return self.values[state]
-
-    def load_values(self):
-        s = 'values' + self.tag + '.csv'
-        try:
-            value_csv = csv.reader(open(s, 'r'))
-            for row in value_csv:
-                k, v = row
-                self.values[k] = float(v)
-        except:
-            pass
-        # print(self.values)
-
-    def save_values(self):
-        s = 'values' + self.tag + '.csv'
-        try:
-            os.remove(s)
-        except:
-            pass
-        a = csv.writer(open(s, 'a'))
-
-        for v, k in self.values.items():
-            a.writerow([v, k])
-
 
 class DeepAgent(Agent):
 
@@ -361,9 +258,6 @@ class DeepAgent(Agent):
 
 
 def check_player():
-    #print('QAgent X 1 and QAgent 1 0')
-    #game = TicTacToe('QAgent', 'QAgent', 1, 0)
-    #game.play_to_learn(1000)
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
     #game = TicTacToe('DeepAgent', 'DeepAgent', 1, 1)
     #game.play_to_learn(100)
