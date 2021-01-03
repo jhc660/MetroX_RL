@@ -204,7 +204,7 @@ class DeepAgent(Agent):
         else:
             print('new model')
             model = Km.Sequential()
-            model.add(Kl.Dense(18, activation='relu', input_dim=96))
+            model.add(Kl.Dense(18, activation='relu', input_dim=95))
             model.add(Kl.Dense(18, activation='relu'))
             model.add(Kl.Dense(1, activation='linear'))
             model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
