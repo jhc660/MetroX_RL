@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 import tokyoBoard
 import cardDeck
 
-
 class MetroX():
 
     def __init__(self, player1, deckType, exp1=1):
@@ -55,9 +54,9 @@ class MetroX():
 
     def play_move(self, learn=False):
         if learn is True:
-            new_state = self.player1.make_move_and_learn(self.state, self.board, self.winner)
+            new_state = self.player1.make_move_and_learn(self.board, self.cardDeck, self.gameEnd)
         else:
-            new_state = self.player1.make_move(self.state, self.board, self.winner)
+            new_state = self.player1.make_move(self.board, self.cardDeck, self.gameEnd)
         self.turnEnd()
         return new_state
 
@@ -129,10 +128,10 @@ class Player():
         self.print_value = False
         self.exp_factor = exploration_factor
 
-    def make_move(self, state, winner):
+    def make_move(self, board, cardDeck, gameEnd):
         idx = int(input('Choose station number: '))
-        s = state[:idx-1] + self.tag + state[idx:]
-        return s
+        board.makeMove(board, cardDeck.currentCard)
+        return board.getState()
 
 
 class Agent(Player):

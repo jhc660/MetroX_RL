@@ -139,10 +139,42 @@ class TokyoBoard():
             gameOver = True
         return gameOver
         
-
     def calculateScore(self):
-        return 0
-            
+        score = 0
+        empty = 0
+        for trainLine in self.trainLines:
+            if trainLine.complete():
+                score += trainLine.points
+        for station in self.stations:
+            if station.fill == 'Empty':
+                empty += 1
+            elif station.fill == 'Star':
+                score += 2*station.connections
+        return score + self.negativeScore(empty)
+
+    def negativeScore(self, empty):
+        if empty >= 21:
+            return -10
+        if empty >= 19:
+            return -9
+        if empty >= 17:
+            return -8
+        if empty >= 15:
+            return -7;
+        if empty >= 13:
+            return -6
+        if empty >= 11:
+            return -5
+        if empty >= 9:
+            return -4
+        if empty >= 8:
+            return -3
+        if empty >= 7:
+            return -2
+        if empty >= 6:
+            return -1
+        else:
+            return 0
 
 class TrainLine():
     def __init__(self, cars, points):
@@ -195,6 +227,14 @@ class TrainLine():
                 if startedAdvance and cardType != 'circle':
                     break
 
+    def complete(self):
+        complete = True
+        for station in self.stations:
+            if station.fill == 'Empty':
+                complete = False
+                break
+        return complete
+
 class TrainStation():
     def __init__(self):
         self.fill = 'Empty'
@@ -214,7 +254,10 @@ def testRoutine():
     tokyoBoardTest.advanceLine(4, 6, 'normal')
     tokyoBoardTest.advanceLine(5, 2, 'circle')
     tokyoBoardTest.advanceLine(5, 1, 'star')
+    tokyoBoardTest.advanceLine(4, 6, 'normal')
+    tokyoBoardTest.advanceLine(4, 6, 'normal')
     print(tokyoBoardTest)
     print(tokyoBoardTest.getState())
+    print('Points: '+str(tokyoBoardTest.calculateScore()))
 
-#testRoutine()
+testRoutine()
