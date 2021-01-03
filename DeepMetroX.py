@@ -152,7 +152,7 @@ class Agent(Player):
                 v_temp = np.average(v_temp)
             else:
                 # encourage exploration
-                v_temp = 50
+                v_temp = 1
 
             if v_temp > v:
                 temp_move_list = [idx]
@@ -169,7 +169,11 @@ class Agent(Player):
         return board.getState()+cardDeck.getState()
 
     def reward(self, board):
-        return board.calculateScore()
+        score = board.calculateScore()
+        reward = (score+6)/90
+        if reward > 1:
+            reward = 1
+        return reward
 
 class DeepAgent(Agent):
 
