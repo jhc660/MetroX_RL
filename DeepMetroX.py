@@ -27,6 +27,7 @@ class MetroX():
 
     def play_to_learn(self, episodes):
         avgScore = 0
+        os.remove("results.txt")
         for i in range(episodes):
             print('Episode number: ' + str(i))
 
@@ -39,12 +40,17 @@ class MetroX():
             print('Score: ' + str(score))
             print('Weighted Average Score: ' + str(avgScore))
 
+            log = open("results.txt", "a")
+            log.write('Weighted Average Score: ' + str(avgScore))
+            log.close()
+
             # update last state
             self.state = self.play_move(learn=True)
             # update winning state
             self.state = self.play_move(learn=True)
 
             self.init_game()
+        
         self.player1.save_values()
 
     def play_move(self, learn=False):
