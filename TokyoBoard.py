@@ -87,6 +87,12 @@ class TokyoBoard():
         self.trainLines[8].addStation(self.trainLines[3].stations[13])
         self.trainLines[8].addStations(self.stations, 4)
 
+    def __str__(self):
+        string = ''
+        for trainLine in self.trainLines:
+            string+=str(trainLine)+'\n'
+        return string
+
     def getState(self):
         state = ''
         for trainLine in self.trainLines:
@@ -94,6 +100,35 @@ class TokyoBoard():
         for station in self.stations:
             state += station.getState()
         return state
+
+    def getValidMoves(self):
+        moves = []
+        for i in range(len(self.trainLines)):
+            if trainLine[i].maxCars > cars:
+                moves.append[i]
+        return moves
+
+    def makeMove(self, line, card):
+        if card == '2':
+            advanceLine(line, 2, 'normal')
+        if card == '3':
+            advanceLine(line, 2, 'normal')
+        if card == '4':
+            advanceLine(line, 4, 'normal')
+        if card == '5':
+            advanceLine(line, 5, 'normal')
+        if card == '6':
+            advanceLine(line, 6, 'normal')
+        if card == 's':
+            advanceLine(line, 1, 'star')
+        if card == 'c2':
+            advanceLine(line, 2, 'circle')
+        if card == 'c3':
+            advanceLine(line, 3, 'circle')
+
+    def advanceLine(self, line, number, cardType):
+        if self.trainLines[line].maxCars > self.trainLines[line].cars:
+            self.trainLines[line].advance(number, cardType)
 
     def gameOver(self):
         gameOver = False
@@ -131,13 +166,34 @@ class TrainLine():
         printValue = 'Points: '+ str(self.points) + ' '
         for station in self.stations:
             if station.fill == 'Empty':
-                printValue+='[E]'
-            printValue+=' '
+                printValue+='[ ]'
+            elif station.fill == 'Star':
+                printValue+='['+str(2*station.connections)+']'
+            else:
+                printValue+='[X]'
         return printValue
 
     def getState(self):
         state = str(self.cars)
         return state
+
+    def advance(self, number, cardType):
+        self.cars += 1
+        advancesLeft = number
+        startedAdvance = False
+        for station in self.stations:
+            if station.fill == 'Empty':
+                startedAdvance = True
+                advancesLeft-=1
+                if cardType == 'star':
+                    station.fill = 'Star'
+                else:
+                    station.fill = 'Filled'
+                if advancesLeft == 0:
+                    break
+            else:
+                if startedAdvance and cardType != 'circle':
+                    break
 
 class TrainStation():
     def __init__(self):
@@ -152,5 +208,13 @@ class TrainStation():
             state = '2'
         return state
 
-tokyoBoardTest = TokyoBoard()
-print(tokyoBoardTest.getState())
+def testRoutine():
+    tokyoBoardTest = TokyoBoard()
+    print(tokyoBoardTest.getState())
+    tokyoBoardTest.advanceLine(4, 6, 'normal')
+    tokyoBoardTest.advanceLine(5, 2, 'circle')
+    tokyoBoardTest.advanceLine(5, 1, 'star')
+    print(tokyoBoardTest)
+    print(tokyoBoardTest.getState())
+
+#testRoutine()

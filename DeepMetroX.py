@@ -26,7 +26,6 @@ class MetroX():
 
         while self.gameEnd is False:
             self.state = self.play_move()
-            self.turnEnd()
             self.print_game()
 
     def play_to_learn(self, episodes):
@@ -36,7 +35,6 @@ class MetroX():
 
             while self.gameEnd is False:
                 self.state = self.play_move(learn=True)
-                self.turnEnd()
 
             # update last state
             self.state = self.play_move(learn=True)
@@ -50,12 +48,6 @@ class MetroX():
             else:
                 self.player1.print_value = False
 
-            if i % 2000 == 0:
-                self.Xcount = 0
-                self.Ocount = 0
-                self.Tcount = 0
-
-            self.all_count = i
             self.init_game()
 
         #self.print_summary()
@@ -63,41 +55,28 @@ class MetroX():
 
     def play_move(self, learn=False):
         if learn is True:
-            new_state = self.player1.make_move_and_learn(self.state, self.winner)
+            new_state = self.player1.make_move_and_learn(self.state, self.board, self.winner)
         else:
-            new_state = self.player1.make_move(self.state, self.winner)
+            new_state = self.player1.make_move(self.state, self.board, self.winner)
+        self.turnEnd()
         return new_state
 
     def print_game(self):
-
-        s = list(self.state)
-
-        print('    {} | {} | {}'.format(s[0], s[1], s[2]))
-        print('  --------------')
-        print('    {} | {} | {}'.format(s[3], s[4], s[5]))
-        print('  --------------')
-        print('    {} | {} | {}'.format(s[6], s[7], s[8]))
-        print('  --------------')
-        print('  --------------')
+        print(self.board)
 
     def turnEnd(self):
         if board.gameOver():
             self.gameEnd = True
         else:
-            cardDeck.draw();
+            cardDeck.nextCard();
 
     def init_game(self):
         self.board = TokyoBoard()
         self.state = board.getFlatState()
         self.gameEnd = False
-        if self.deckType == 'deck':
-            self.cardDeck = CardDeck()
-        else:
-            self.cardDeck = PlayerDeck()
-        
+        self.cardDeck = CardDeck()
 
     def print_bar(self):
-1
         plt.close()
         fig = plt.figure()
         ax1 = fig.add_subplot(2, 1, 1)
@@ -151,7 +130,7 @@ class Player():
         self.exp_factor = exploration_factor
 
     def make_move(self, state, winner):
-        idx = int(input('Choose move number: '))
+        idx = int(input('Choose station number: '))
         s = state[:idx-1] + self.tag + state[idx:]
         return s
 
@@ -165,11 +144,6 @@ class Agent(Player):
         self.prev_state = '123456789'
         self.state = None
         self.print_value = False
-
-        if self.tag == 'X':
-            self.op_tag = 'O'
-        else:
-            self.op_tag = 'X'
 
     @abstractmethod
     def calc_value(self, state):
