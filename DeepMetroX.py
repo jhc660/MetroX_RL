@@ -86,8 +86,8 @@ class Player():
 
 class Agent(Player):
 
-    def __init__(self, tag, exploration_factor=1):
-        super().__init__(tag, exploration_factor)
+    def __init__(self, exploration_factor=1):
+        super().__init__(exploration_factor)
         self.epsilon = 0.1
         self.alpha = 0.5
         self.prev_state = TokyoBoard.TokyoBoard().getState() + cardDeck.CardDeck().getState()
@@ -174,7 +174,7 @@ class Agent(Player):
 class DeepAgent(Agent):
 
     def __init__(self, exploration_factor=1):
-        super().__init__(tag, exploration_factor)
+        super().__init__(exploration_factor)
         self.value_model = self.load_model()
 
     @staticmethod
@@ -196,7 +196,7 @@ class DeepAgent(Agent):
         self.prev_state = state
 
     def load_model(self):
-        s = 'model_values' + self.tag + '.h5'
+        s = 'model_values_metroX.h5'
         model_file = Path(s)
         if model_file.is_file():
             model = Km.load_model(s)
@@ -237,7 +237,7 @@ class DeepAgent(Agent):
             self.value_model.fit(X_train, target, epochs=epochs, verbose=0)
 
     def save_values(self):
-        s = 'model_values_metroX' + '.h5'
+        s = 'model_values_metroX.h5'
         try:
             os.remove(s)
         except:
