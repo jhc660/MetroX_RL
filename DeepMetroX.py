@@ -33,7 +33,7 @@ class MetroX():
             while self.gameEnd is False:
                 self.state = self.play_move(learn=True)
 
-            print('Score: ' + self.board.calculateScore())
+            print('Score: ' + str(self.board.calculateScore()))
 
             # update last state
             self.state = self.play_move(learn=True)
