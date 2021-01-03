@@ -17,7 +17,7 @@ class MetroX():
         player1 = globals()[player1]
         self.player1 = player1(exploration_factor=exp1)
         self.deckType = deckType
-        init_game()
+        self.init_game()
 
     def play_game(self):
         if isinstance(self.player1, QAgent):
