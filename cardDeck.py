@@ -36,7 +36,7 @@ class CardDeck():
         return state
 
     def previewNextCard(self):
-        copiedDeck = copy.deepCopy(self)
+        copiedDeck = copy.deepcopy(self)
         copiedDeck.nextCard()
         return copiedDeck.getState()
 
