@@ -15,21 +15,19 @@ import cardDeck
 class MetroX():
 
     def __init__(self, player1, deckType, exp1=1):
-        
-
         player1 = globals()[player1]
         self.player1 = player1(exploration_factor=exp1)
         self.deckType = deckType
         init_game()
 
     def play_game(self):
-
         if isinstance(self.player1, QAgent):
             self.player1.exp_factor = 1
 
-        self.state = self.play_move()
-        self.turnEnd()
-        self.print_game()
+        while self.gameEnd is False:
+            self.state = self.play_move()
+            self.turnEnd()
+            self.print_game()
 
     def play_to_learn(self, episodes):
 
@@ -99,7 +97,7 @@ class MetroX():
         
 
     def print_bar(self):
-
+1
         plt.close()
         fig = plt.figure()
         ax1 = fig.add_subplot(2, 1, 1)
