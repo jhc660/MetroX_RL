@@ -160,6 +160,19 @@ class TokyoBoard():
                 score += 2*station.connections
         return score + self.negativeScore(empty)
 
+    def calculateReward(self):
+        score = 0
+        empty = 0
+        for trainLine in self.trainLines:
+            if trainLine.complete():
+                score += trainLine.points
+        for station in self.stations:
+            if station.fill == 'Empty':
+                empty += 1
+            elif station.fill == 'Star':
+                score += 2*station.connections
+        return score - empty
+
     def negativeScore(self, empty):
         if empty >= 21:
             return -10
