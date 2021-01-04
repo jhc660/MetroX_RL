@@ -26,7 +26,7 @@ class MetroX():
             self.print_game()
 
     def play_to_learn(self, episodes):
-        avgScore = 0
+        avgReward = 0
         
         try:
             os.remove("results.txt")
