@@ -40,10 +40,12 @@ class MetroX():
                 self.state = self.play_move(learn=True)
 
             score = self.board.calculateScore()
-            avgScore = (avgScore*0.95) + (score*0.05)
+            reward = self.board.calculateReward()
+            avgReward = (avgReward*0.95) + (reward*0.05)
                 
             print('Score: ' + str(score))
-            print('Weighted Average Score: ' + str(avgScore))
+            print('Reward: ' + str(reward))
+            print('Weighted Average Score: ' + str(avgReward))
 
             log = open("results.txt", "a")
             log.write(str(score)+', ')
@@ -183,7 +185,7 @@ class Agent(Player):
         return board.getState()+cardDeck.getState()
 
     def reward(self, board):
-        return board.calculateScore()
+        return board.calculateReward()
 
 class DeepAgent(Agent):
 
