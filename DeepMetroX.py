@@ -166,7 +166,7 @@ class Agent(Player):
                 v_temp = np.average(v_temp)
             else:
                 # encourage exploration
-                v_temp = 1
+                v_temp = 50
 
             if v_temp > v:
                 temp_move_list = [idx]
@@ -183,11 +183,7 @@ class Agent(Player):
         return board.getState()+cardDeck.getState()
 
     def reward(self, board):
-        score = board.calculateScore()
-        reward = (score+6)/90
-        if reward > 1:
-            reward = 1
-        return reward
+        return board.calculateScore()
 
 class DeepAgent(Agent):
 
@@ -265,9 +261,9 @@ class DeepAgent(Agent):
 
 def check_player():
     #print('DeepAgent X 0.8 and DeepAgent 0.8')
-    game = MetroX('DeepAgent', 'Random', 0.8)
+    game = MetroX('DeepAgent', 'RandomDeck', 0.8)
     game.play_to_learn(10000)
-    game = MetroX('DeepAgent', 'Random', 1)
+    game = MetroX('DeepAgent', 'RandomDeck', 1)
     game.play_game()
 
 
