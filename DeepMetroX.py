@@ -153,7 +153,7 @@ class Agent(Player):
             v_temp = []
             temp_state = board.previewMove(idx, cardDeck.currentCard)
 
-            simCardDraws = 10
+            simCardDraws = 50
             while simCardDraws > 0:
                 simCardDraws-=1
                 temp_state_op = temp_state+cardDeck.previewNextCard()
@@ -222,8 +222,8 @@ class DeepAgent(Agent):
         else:
             print('new model')
             model = Km.Sequential()
-            model.add(Kl.Dense(64, activation='relu', input_dim=95))
-            model.add(Kl.Dense(64, activation='relu'))
+            model.add(Kl.Dense(180, activation='relu', input_dim=87))
+            model.add(Kl.Dense(180, activation='relu'))
             model.add(Kl.Dense(1, activation='linear'))
             model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
 

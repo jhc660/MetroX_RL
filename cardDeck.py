@@ -27,14 +27,14 @@ class CardDeck():
         elif card == 's':
             card = '1'
         state = card
-        state += str(self.deck.count('2'))
-        state += str(self.deck.count('3'))
-        state += str(self.deck.count('4'))
-        state += str(self.deck.count('5'))
-        state += str(self.deck.count('6'))
-        state += str(self.deck.count('s'))
-        state += str(self.deck.count('c2'))
-        state += str(self.deck.count('c3'))
+        #state += str(self.deck.count('2'))
+        #state += str(self.deck.count('3'))
+        #state += str(self.deck.count('4'))
+        #state += str(self.deck.count('5'))
+        #state += str(self.deck.count('6'))
+        #state += str(self.deck.count('s'))
+        #state += str(self.deck.count('c2'))
+        #state += str(self.deck.count('c3'))
         return state
 
     def previewNextCard(self):
