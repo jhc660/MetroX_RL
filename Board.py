@@ -22,8 +22,8 @@ class Board():
         return state
 
     def getStateLen(self):
-        stateLen = self.trainLines.len()
-        stateLen += self.stations.len()
+        stateLen = len(self.trainLines)
+        stateLen += len(self.stations)
         return stateLen
 
     def getValidMoves(self):

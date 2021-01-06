@@ -20,6 +20,7 @@ def testRoutine():
     easyBoardTest.makeMove(0, '6')
     easyBoardTest.makeMove(1, 'c2')
     easyBoardTest.makeMove(2, 's')
+    easyBoardTest.getStateLen()
     print(easyBoardTest)
     print(easyBoardTest.getState())
     print('Points: '+str(easyBoardTest.calculateScore()))
