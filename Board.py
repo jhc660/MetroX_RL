@@ -119,6 +119,7 @@ class Board():
             return -1
         else:
             return 0
+        
 
 class TrainLine():
     def __init__(self, cars, points):

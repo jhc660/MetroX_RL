@@ -45,7 +45,7 @@ class MetroX():
                 
             print('Score: ' + str(score))
             print('Reward: ' + str(reward))
-            print('Weighted Average Score: ' + str(avgReward))
+            print('Weighted Average Reward: ' + str(avgReward))
 
             log = open("results.txt", "a")
             log.write(str(score)+', ')
