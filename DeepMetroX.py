@@ -8,7 +8,7 @@ import keras.layers as Kl
 import keras.models as Km
 import numpy as np
 import matplotlib.pyplot as plt
-import TokyoBoard
+import EasyBoard
 import cardDeck
 
 class MetroX():
@@ -83,7 +83,7 @@ class MetroX():
         return self.cardDeck.getState()
 
     def init_game(self):
-        self.board = TokyoBoard.TokyoBoard()
+        self.board = EasyBoard.EasyBoard()
         self.gameEnd = False
         self.cardDeck = cardDeck.CardDeck()
 
@@ -106,7 +106,7 @@ class Agent(Player):
         super().__init__(exploration_factor)
         self.epsilon = 0.1
         self.alpha = 0.5
-        self.prev_state = TokyoBoard.TokyoBoard().getState() + cardDeck.CardDeck().getState()
+        self.prev_state = EasyBoard.EasyBoard().getState() + cardDeck.CardDeck().getState()
         self.state = None
         self.print_value = False
 
@@ -220,7 +220,7 @@ class DeepAgent(Agent):
         else:
             print('new model')
             model = Km.Sequential()
-            model.add(Kl.Dense(180, activation='relu', input_dim=87))
+            model.add(Kl.Dense(180, activation='relu', input_dim=(EasyBoard.getStateLen()+1)))
             model.add(Kl.Dense(180, activation='relu'))
             model.add(Kl.Dense(1, activation='linear'))
             model.compile(optimizer='adam', loss='mean_absolute_error', metrics=['accuracy'])
