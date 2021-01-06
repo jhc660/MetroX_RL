@@ -159,6 +159,7 @@ class Agent(Player):
             while simCardDraws > 0:
                 simCardDraws-=1
                 temp_state_op = temp_state+cardDeck.previewNextCard()
+                print(temp_state_op)
                 v_temp.append(self.calc_value(temp_state_op))
 
             # deletes Nones
